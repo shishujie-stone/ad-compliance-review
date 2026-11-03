@@ -167,8 +167,8 @@ function resultHtml(id,opts){
 /* ---------- 呈上素材 ---------- */
 var ind='美妆', mode='text', imgSend='', imgThumb='', frames=[], busy=false;
 function pick(group,fn){$$(group+' button').forEach(function(b){b.addEventListener('click',function(){$$(group+' button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});fn(b.dataset.v)})})}
-pick('#f-ind',function(v){ind=v;sIdx=-1;$('#f-text').placeholder=HINT[v];$('#f-sample').textContent='填入示例'});
-pick('#f-mode',function(v){mode=v;$('#fld-img').hidden=v!=='image';$('#fld-video').hidden=v!=='video';$('#lbl-text').textContent=v==='text'?'种草文案':'配套文案（可选）'});
+pick('#f-ind',function(v){ind=v;sIdx=-1;$('#f-text').placeholder=HINT[v];$('#f-sample').textContent=mode==='batch'?'填入一组示例':'填入示例'});
+pick('#f-mode',function(v){mode=v;$('#fld-img').hidden=v!=='image';$('#fld-video').hidden=v!=='video';$('#fld-batch').hidden=v!=='batch';$('#fld-text').hidden=v==='batch';$('#lbl-text').textContent=v==='text'?'种草文案':'配套文案（可选）';$('#f-sample').textContent=v==='batch'?'填入一组示例':'填入示例';sIdx=-1});
 $('#f-text').addEventListener('input',function(){$('#f-count').textContent=$('#f-text').value.length});
 var SAMPLES={
   美妆:['这款精华真的绝了！全网最好用，7天祛痘印，敏感肌也能放心用，无效退款！',
@@ -182,8 +182,8 @@ var SAMPLES={
     '百年老字号祖传秘方阿胶糕，补气养血，降三高，中老年人的首选',
     '0蔗糖酸奶，配料表很干净，口感偏酸，早餐配燕麦很顶饱']};
 var HINT={美妆:'粘贴要发布的标题和正文，例如：这款精华真的绝了！全网最好用，7天祛痘印……',食品:'粘贴要发布的标题和正文，例如：这款酵素一天一杯，排毒刮油，一个月瘦十斤……'},sIdx=-1;
-$('#f-sample').addEventListener('click',function(){var a=SAMPLES[ind];sIdx=(sIdx+1)%a.length;$('#f-text').value=a[sIdx];$('#f-count').textContent=$('#f-text').value.length;this.textContent='换一条示例（'+(sIdx+1)+'/'+a.length+'）'});
-$('#f-clear').addEventListener('click',function(){$('#f-text').value='';$('#f-count').textContent='0';$('#f-transcript').value='';setImg(null);setVideo(null)});
+$('#f-sample').addEventListener('click',function(){var a=SAMPLES[ind];if(mode==='batch'){$('#f-batch').value=a.join('\n');bCount();return}sIdx=(sIdx+1)%a.length;$('#f-text').value=a[sIdx];$('#f-count').textContent=$('#f-text').value.length;this.textContent='换一条示例（'+(sIdx+1)+'/'+a.length+'）'});
+$('#f-clear').addEventListener('click',function(){$('#f-text').value='';$('#f-count').textContent='0';$('#f-transcript').value='';setImg(null);setVideo(null);$('#f-batch').value='';bImgs=[];renderBImgs()});
 function canvasOf(src,max){var W=src.videoWidth||src.width,H=src.videoHeight||src.height,s=Math.min(1,max/Math.max(W,H)),c=document.createElement('canvas');c.width=Math.round(W*s);c.height=Math.round(H*s);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c}
 var IMG_TXT='点击选择或拖入一张图片（JPG / PNG / WebP），AI 会读取图中文字和画面里的宣称元素',VID_TXT='点击选择或拖入一段视频（MP4 / MOV / WebM）。页面会在你的浏览器里截取 6 个关键画面，视频本身不会上传';
 function setImg(file){
@@ -213,11 +213,18 @@ $('#f-video').addEventListener('change',function(e){setVideo(e.target.files[0])}
   el.addEventListener('drop',function(e){var f=e.dataTransfer.files[0];if(f)p[1](f)})});
 
 function api(path,body){return fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().catch(function(){return {ok:false,message:'服务器没有返回结果（'+r.status+'）'}})})}
-var STEPS=['研墨，读取素材','比对法规要点 27 条','检索处罚案例 33 例','逐句审读，标出风险','拟写修改建议'];
+var STEPS=['研墨，读取素材','比对法规要点','检索处罚案例','逐句审读，标出风险','拟写修改建议'];
 function waitHtml(steps){return '<div class="wait"><svg class="enso" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 12 C76 12 90 32 88 52 C86 76 66 90 46 88 C24 86 10 68 12 48 C14 30 28 16 44 13"/></svg><div class="step" aria-live="polite"><span>'+steps[0]+'</span></div><div class="dots"><i></i><i></i><i></i></div></div>'}
 function cycle(el,steps){var i=0;return setInterval(function(){var s=el.querySelector('.step');if(!s)return;i=(i+1)%steps.length;s.innerHTML='<span>'+steps[i]+'</span>'},1400)}
+function saveRec(kind,industry,text,transcript,imgData,frames,ai){
+  var id='S'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  var rec={id:id,kind:kind,industry:industry,text:text,transcript:transcript,imgData:imgData,frames:frames,ai:ai,flags:routeFlags(text+' '+transcript+' '+ai.image_text,kind,ai),src:'我提交的',at:new Date().toISOString()};
+  mine[id]=rec;Object.keys(mine).sort(function(a,b){return String(mine[b].at).localeCompare(String(mine[a].at))}).slice(100).forEach(function(k){delete mine[k]});
+  store(LS_REC,mine);results[id]=rec;status.used++;showQuota();return id;
+}
 $('#f-review').addEventListener('submit',function(e){
   e.preventDefault();if(busy)return;
+  if(mode==='batch'){runBatch();return}
   var text=$('#f-text').value.trim(),transcript=$('#f-transcript').value.trim(),body={industry:ind,text:text};
   if(mode==='image'){if(!imgSend){$('#r-panel').innerHTML='<p class="notice warn">请先选择一张图片。</p>';return}body.images=[imgSend]}
   if(mode==='video'){if(!frames.length&&!transcript){$('#r-panel').innerHTML='<p class="notice warn">请先选择视频，或填写口播文字。</p>';return}body.images=frames;body.video={transcript:transcript}}
@@ -229,14 +236,62 @@ $('#f-review').addEventListener('submit',function(e){
   var kind={text:'文案',image:'图片',video:'视频'}[mode],snapImg=imgThumb,snapFrames=frames.slice(),industry=ind,m=mode;
   api('/api/review',body).then(function(res){
     if(!res.ok){$('#r-panel').innerHTML='<p class="notice warn">'+esc(res.message||'审核没有完成，请稍后重试。')+'</p>';return}
-    var ai=res.result,id='S'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
     var fr=m==='video'?snapFrames:[];if(fr.length>3)fr=[fr[0],fr[2],fr[fr.length-1]];
-    var rec={id:id,kind:kind,industry:industry,text:text,transcript:m==='video'?transcript:'',imgData:m==='image'?snapImg:'',frames:fr,ai:ai,flags:routeFlags(text+' '+transcript+' '+ai.image_text,kind,ai),src:'我提交的',at:new Date().toISOString()};
-    mine[id]=rec;Object.keys(mine).sort(function(a,b){return String(mine[b].at).localeCompare(String(mine[a].at))}).slice(100).forEach(function(k){delete mine[k]});
-    store(LS_REC,mine);results[id]=rec;cur=id;curFresh=true;status.used++;showQuota();refresh();curFresh=false;
+    cur=saveRec(kind,industry,text,m==='video'?transcript:'',m==='image'?snapImg:'',fr,res.result);batchOpen=false;curFresh=true;refresh();curFresh=false;
   }).catch(function(){$('#r-panel').innerHTML='<p class="notice warn">网络出错了，请检查网络后重试。</p>'}).then(function(){clearInterval(tm);busy=false;$('#f-submit').disabled=!status.ready});
 });
-function renderPanel(){if(cur&&results[cur])$('#r-panel').innerHTML=resultHtml(cur,{anim:curFresh})}
+function renderPanel(){
+  if(batch&&batchOpen){$('#r-panel').innerHTML=batchHtml();return}
+  if(cur&&results[cur])$('#r-panel').innerHTML=(batch&&batch.items.some(function(x){return x.id===cur})?'<button type="button" class="btn ghost back" data-bback>← 返回本批结果</button>':'')+resultHtml(cur,{anim:curFresh});
+}
+
+/* ---------- 批量审核 ---------- */
+var BMAX=20, bImgs=[], batch=null, batchOpen=false;
+function bLines(){return $('#f-batch').value.split(/\r?\n/).map(function(l){return l.trim()}).filter(Boolean)}
+function bCount(){var n=bLines().length+bImgs.length;$('#f-bcount').textContent='共 '+n+' 条'+(n>BMAX?'，超过 '+BMAX+' 条的部分不会审核':'');$('#f-bcount').className=n>BMAX?'warn-t':'muted'}
+function renderBImgs(){$('#f-bimgs').innerHTML=bImgs.map(function(b,i){return '<span class="bimg"><img src="'+b.thumb+'" alt="'+esc(b.name)+'"><button type="button" data-bdel="'+i+'" aria-label="移除这张图片">×</button></span>'}).join('');bCount()}
+$('#f-batch').addEventListener('input',bCount);
+function parseCSV(t){var rows=[],row=[],f='',q=false;for(var i=0;i<t.length;i++){var c=t[i];
+  if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}else f+=c}
+  if(f||row.length){row.push(f);rows.push(row)}return rows.filter(function(r){return r.some(function(x){return x.trim()})})}
+$('#f-bfile').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var rd=new FileReader();
+  rd.onload=function(){var t=String(rd.result).replace(/^﻿/,''),lines;
+    if(/\.csv$/i.test(file.name)){var rows=parseCSV(t),col=0,h=rows[0]||[];var k=h.findIndex(function(x){return /文案|内容|正文|text/i.test(x)});if(k>=0){col=k;rows=rows.slice(1)}lines=rows.map(function(r){return (r[col]||'').replace(/\s*\n\s*/g,' ').trim()})}
+    else lines=t.split(/\r?\n/);
+    lines=lines.map(function(l){return l.trim()}).filter(Boolean);
+    $('#f-batch').value=($('#f-batch').value.trim()?$('#f-batch').value.trim()+'\n':'')+lines.join('\n');bCount();e.target.value=''};
+  rd.readAsText(file,'utf-8')});
+$('#f-bimg').addEventListener('change',function(e){Array.prototype.slice.call(e.target.files).forEach(function(file){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type))return;var url=URL.createObjectURL(file),im=new Image();
+  im.onload=function(){bImgs.push({name:file.name,send:canvasOf(im,1280).toDataURL('image/jpeg',0.85),thumb:canvasOf(im,360).toDataURL('image/jpeg',0.72)});URL.revokeObjectURL(url);renderBImgs()};im.src=url});e.target.value=''});
+$('#f-bimgs').addEventListener('click',function(e){var b=e.target.closest('[data-bdel]');if(b){bImgs.splice(+b.dataset.bdel,1);renderBImgs()}});
+function batchHtml(){
+  var it=batch.items,done=it.filter(function(x){return x.status==='done'}),err=it.filter(function(x){return x.status==='err'}).length;
+  var bad=done.filter(function(x){return results[x.id].ai.is_violation}).length,wait=done.filter(function(x){return stateOf(x.id)==='wait'}).length,fin=done.length+err;
+  var head='<div class="head"><h2>批量审核 · '+esc(batch.industry)+'</h2><span class="muted">'+(fin<it.length?'已完成 '+fin+' / '+it.length:'全部完成')+'</span></div>'+
+    '<div class="bar"><i style="width:'+Math.round(fin/it.length*100)+'%"></i></div>'+
+    '<p class="bsum">违规 <b class="r">'+bad+'</b> · 合规 <b class="g">'+(done.length-bad)+'</b> · 待人工复核 <b class="d">'+wait+'</b>'+(err?' · 失败 <b>'+err+'</b>':'')+'</p>';
+  var rows=it.map(function(x){var lab=esc(x.label);
+    if(x.status==='done'){var r=results[x.id];return '<button type="button" class="row-item" data-open="'+esc(x.id)+'"><span class="mini'+(r.ai.is_violation?'':' ok')+'">'+(r.ai.is_violation?'违规':'合规')+'</span><span class="t">'+lab+'</span><span class="chip'+(stateOf(x.id)==='wait'?' dai':'')+'">'+(stateOf(x.id)==='wait'?'待复核':r.ai.is_violation?r.ai.violations.length+' 处':'可发布')+'</span></button>'}
+    return '<div class="row-item dim"><span class="chip">'+(x.status==='run'?'审核中…':x.status==='err'?'失败':'排队中')+'</span><span class="t">'+lab+'</span>'+(x.status==='err'?'<span class="chip" title="'+esc(x.msg)+'">'+esc((x.msg||'').slice(0,14))+'</span>':'<span></span>')+'</div>'}).join('');
+  return head+'<div class="recent">'+rows+'</div>'+(fin===it.length&&wait?'<div class="acts" style="margin-top:14px"><button type="button" class="btn" data-go="queue">去人工复核（'+wait+' 条）</button></div>':'');
+}
+function runBatch(){
+  var items=bLines().map(function(t){return {kind:'文案',text:t,label:t}}).concat(bImgs.map(function(b){return {kind:'图片',text:'',img:b,label:'图片：'+b.name}})).slice(0,BMAX);
+  if(!items.length){$('#r-panel').innerHTML='<p class="notice warn">请先填写文案（每行一条）、导入文件或添加图片。</p>';return}
+  items.forEach(function(x){x.status='wait'});
+  batch={industry:ind,items:items};batchOpen=true;busy=true;$('#f-submit').disabled=true;renderPanel();
+  if(window.innerWidth<900)$('#r-panel').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'});
+  var next=0,b=batch;
+  function work(){if(next>=items.length)return Promise.resolve();var x=items[next++];x.status='run';if(batch===b&&batchOpen)renderPanel();
+    var body={industry:b.industry,text:x.text};if(x.img)body.images=[x.img.send];
+    return api('/api/review',body).then(function(res){if(!res.ok){x.status='err';x.msg=res.message||'审核没有完成';return}
+      x.id=saveRec(x.kind,b.industry,x.text,'',x.img?x.img.thumb:'',[],res.result);x.status='done'})
+    .catch(function(){x.status='err';x.msg='网络出错了'}).then(function(){counts();renderRecent();if(view==='review'&&batch===b&&batchOpen)renderPanel();return work()})}
+  Promise.all([work(),work()]).then(function(){busy=false;$('#f-submit').disabled=!status.ready;refresh()});
+}
+document.addEventListener('click',function(e){if(e.target.closest('[data-bback]')){batchOpen=true;renderPanel()}});
 function renderRecent(){
   var ids=sorted().filter(function(i){return isMine(results[i])}).slice(0,6);
   $('#recent').innerHTML=ids.length?ids.map(function(i){var r=results[i],st=stateOf(i);return '<button type="button" class="row-item" data-open="'+esc(i)+'"><span class="mini'+(r.ai.is_violation?'':' ok')+'">'+(r.ai.is_violation?'违规':'合规')+'</span><span class="t">'+esc(r.text||r.transcript||('（'+r.kind+'素材）'))+'</span><span class="chip'+(st==='wait'?' dai':'')+'">'+{wait:'待复核',done:'已复核',auto:'AI 已处理'}[st]+'</span></button>'}).join(''):'<p class="muted" style="font-size:13.5px">还没有呈上过素材。审核记录只保存在你自己的浏览器里。</p>';
@@ -245,7 +300,7 @@ function renderRecent(){
 /* ---------- 复核结论 ---------- */
 var timers={};function saveDec(){store(LS_DEC,decisions)}
 document.addEventListener('click',function(e){
-  var o=e.target.closest('[data-open]');if(o){cur=o.dataset.open;if(view!=='review')show('review');renderPanel();$('#r-panel').scrollIntoView({block:'start'});return}
+  var o=e.target.closest('[data-open]');if(o){cur=o.dataset.open;batchOpen=false;if(view!=='review')show('review');renderPanel();$('#r-panel').scrollIntoView({block:'start'});return}
   var g=e.target.closest('[data-goq]');if(g){qSel=g.dataset.goq;show('queue');return}
   var b=e.target.closest('button[data-act]');if(!b)return;
   var id=b.dataset.id,act=b.dataset.act,c=Object.assign({},decisions[id]||{});

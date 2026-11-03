@@ -235,3 +235,16 @@ tbody tr:hover td{background:var(--well)}
 .drawer a{color:var(--dai)}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+
+/* 批量审核 */
+.bt-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.bt-row label.btn{cursor:pointer}
+.warn-t{color:var(--amber);font-size:13px}
+.bimg{position:relative;display:inline-block}
+.bimg button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);font-size:13px;line-height:20px;padding:0}
+.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:var(--cinnabar);transition:width .4s ease}
+.bsum{font-size:13.5px;color:var(--ink2);margin:0 0 12px}
+.bsum b{font-family:var(--serif)}.bsum .r{color:var(--cinnabar)}.bsum .g{color:var(--jade)}.bsum .d{color:var(--dai)}
+.row-item.dim{opacity:.7;cursor:default}
+.btn.back{margin-bottom:12px}

@@ -94,7 +94,7 @@
           <div class="head"><h2>呈上一条种草素材</h2><span class="quota" id="quota"></span></div>
           <form id="f-review">
             <span class="lab" id="lbl-mode">素材类型</span>
-            <div class="seg" role="group" aria-labelledby="lbl-mode" id="f-mode"><button type="button" data-v="text" aria-pressed="true">文案</button><button type="button" data-v="image" aria-pressed="false">图片</button><button type="button" data-v="video" aria-pressed="false">视频</button></div>
+            <div class="seg" role="group" aria-labelledby="lbl-mode" id="f-mode"><button type="button" data-v="text" aria-pressed="true">文案</button><button type="button" data-v="image" aria-pressed="false">图片</button><button type="button" data-v="video" aria-pressed="false">视频</button><button type="button" data-v="batch" aria-pressed="false">批量</button></div>
             <span class="lab" id="lbl-ind">行业</span>
             <div class="seg" role="group" aria-labelledby="lbl-ind" id="f-ind"><button type="button" data-v="美妆" aria-pressed="true">美妆</button><button type="button" data-v="食品" aria-pressed="false">食品</button><span class="soon" title="目前支持美妆、食品两个行业">更多行业 · 敬请期待</span></div>
             <div class="field" id="fld-img" hidden><label class="lab" for="f-img">图片</label>
@@ -106,7 +106,11 @@
               <div class="frames" id="f-frames"></div>
               <label class="lab" for="f-transcript" style="margin-top:6px">口播 / 字幕文字（建议填写）</label>
               <textarea id="f-transcript" rows="3" maxlength="3000" placeholder="视频里说了什么、字幕写了什么。AI 只能看到截取的画面，听不到声音"></textarea></div>
-            <div class="field"><label class="lab" for="f-text" id="lbl-text">种草文案</label>
+            <div class="field" id="fld-batch" hidden><label class="lab" for="f-batch">批量文案（每行一条）</label>
+              <textarea id="f-batch" rows="7" placeholder="一行一条文案，最多 20 条；也可以导入 TXT / CSV 文件，或添加多张图片一起审核"></textarea>
+              <div class="bt-row"><label class="btn" for="f-bfile">导入 TXT / CSV</label><input type="file" id="f-bfile" accept=".txt,.csv,text/plain,text/csv" hidden><label class="btn" for="f-bimg">添加图片</label><input type="file" id="f-bimg" accept="image/jpeg,image/png,image/webp" multiple hidden><span class="muted" id="f-bcount">共 0 条</span></div>
+              <div class="frames" id="f-bimgs"></div></div>
+            <div class="field" id="fld-text"><label class="lab" for="f-text" id="lbl-text">种草文案</label>
               <textarea id="f-text" rows="6" maxlength="2000" placeholder="粘贴要发布的标题和正文，例如：这款精华真的绝了！全网最好用，7天祛痘印……"></textarea>
               <div class="counter"><span id="f-count">0</span> / 2000 字</div></div>
             <div class="acts"><button type="submit" class="btn primary" id="f-submit">开始审核</button><button type="button" class="btn" id="f-sample">填入示例</button><button type="button" class="btn ghost" id="f-clear">清空</button></div>
