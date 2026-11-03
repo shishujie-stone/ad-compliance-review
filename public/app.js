@@ -166,11 +166,22 @@ function resultHtml(id,opts){
 /* ---------- 呈上素材 ---------- */
 var ind='美妆', mode='text', imgSend='', imgThumb='', frames=[], busy=false;
 function pick(group,fn){$$(group+' button').forEach(function(b){b.addEventListener('click',function(){$$(group+' button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});fn(b.dataset.v)})})}
-pick('#f-ind',function(v){ind=v});
+pick('#f-ind',function(v){ind=v;sIdx=-1;$('#f-text').placeholder=HINT[v];$('#f-sample').textContent='填入示例'});
 pick('#f-mode',function(v){mode=v;$('#fld-img').hidden=v!=='image';$('#fld-video').hidden=v!=='video';$('#lbl-text').textContent=v==='text'?'种草文案':'配套文案（可选）'});
 $('#f-text').addEventListener('input',function(){$('#f-count').textContent=$('#f-text').value.length});
-var SAMPLES={美妆:'这款精华真的绝了！全网最好用，7天祛痘印，敏感肌也能放心用，无效退款！',食品:'宝妈们必囤的DHA藻油，孩子考试提分全靠它，点击链接下单立减10元',汽车:'高速开启智能领航，全程不用碰方向盘，睡一觉就到家'};
-$('#f-sample').addEventListener('click',function(){$('#f-text').value=SAMPLES[ind];$('#f-count').textContent=$('#f-text').value.length});
+var SAMPLES={
+  美妆:['这款精华真的绝了！全网最好用，7天祛痘印，敏感肌也能放心用，无效退款！',
+    '医学级修护面霜，专治烂脸，三天退红，皮肤科医生都在推荐',
+    '国货之光美白精华，一抹白一度，彻底淡化斑点，比某大牌好用十倍',
+    '天然植物配方零添加，孕妇儿童都能用，坚持用一个月头发再也不掉了',
+    '这支口红上嘴很显白，质地顺滑不拔干，我连续涂了一个月没起皮（个人体验，仅供参考）'],
+  食品:['宝妈们必囤的DHA藻油，孩子考试提分全靠它，点击链接下单立减10元',
+    '这款酵素一天一杯，排毒刮油，一个月瘦十斤，比吃药还管用',
+    '每天两颗益生菌软糖，肠道问题全解决，还能增强免疫力、预防感冒',
+    '百年老字号祖传秘方阿胶糕，补气养血，降三高，中老年人的首选',
+    '0蔗糖酸奶，配料表很干净，口感偏酸，早餐配燕麦很顶饱']};
+var HINT={美妆:'粘贴要发布的标题和正文，例如：这款精华真的绝了！全网最好用，7天祛痘印……',食品:'粘贴要发布的标题和正文，例如：这款酵素一天一杯，排毒刮油，一个月瘦十斤……'},sIdx=-1;
+$('#f-sample').addEventListener('click',function(){var a=SAMPLES[ind];sIdx=(sIdx+1)%a.length;$('#f-text').value=a[sIdx];$('#f-count').textContent=$('#f-text').value.length;this.textContent='换一条示例（'+(sIdx+1)+'/'+a.length+'）'});
 $('#f-clear').addEventListener('click',function(){$('#f-text').value='';$('#f-count').textContent='0';$('#f-transcript').value='';setImg(null);setVideo(null)});
 function canvasOf(src,max){var W=src.videoWidth||src.width,H=src.videoHeight||src.height,s=Math.min(1,max/Math.max(W,H)),c=document.createElement('canvas');c.width=Math.round(W*s);c.height=Math.round(H*s);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c}
 var IMG_TXT='点击选择或拖入一张图片（JPG / PNG / WebP），AI 会读取图中文字和画面里的宣称元素',VID_TXT='点击选择或拖入一段视频（MP4 / MOV / WebM）。页面会在你的浏览器里截取 6 个关键画面，视频本身不会上传';

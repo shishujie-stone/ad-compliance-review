@@ -12,7 +12,7 @@ DATA_URL = re.compile(r"^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$")
 
 
 def handle(body, ip):
-    industry = body.get("industry") if body.get("industry") in ("美妆", "食品", "汽车") else "美妆"
+    industry = body.get("industry") if body.get("industry") in ("美妆", "食品") else "美妆"
     text = str(body.get("text") or "").strip()[:2000]
     images = [i for i in (body.get("images") or []) if isinstance(i, str) and DATA_URL.match(i)][:8]
     video = body.get("video") if isinstance(body.get("video"), dict) else None

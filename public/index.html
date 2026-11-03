@@ -97,7 +97,7 @@
             <span class="lab" id="lbl-mode">素材类型</span>
             <div class="seg" role="group" aria-labelledby="lbl-mode" id="f-mode"><button type="button" data-v="text" aria-pressed="true">文案</button><button type="button" data-v="image" aria-pressed="false">图片</button><button type="button" data-v="video" aria-pressed="false">视频</button></div>
             <span class="lab" id="lbl-ind">行业</span>
-            <div class="seg" role="group" aria-labelledby="lbl-ind" id="f-ind"><button type="button" data-v="美妆" aria-pressed="true">美妆</button><button type="button" data-v="食品" aria-pressed="false">食品</button><button type="button" data-v="汽车" aria-pressed="false">汽车</button></div>
+            <div class="seg" role="group" aria-labelledby="lbl-ind" id="f-ind"><button type="button" data-v="美妆" aria-pressed="true">美妆</button><button type="button" data-v="食品" aria-pressed="false">食品</button><span class="soon" title="目前支持美妆、食品两个行业">更多行业 · 敬请期待</span></div>
             <div class="field" id="fld-img" hidden><label class="lab" for="f-img">图片</label>
               <label class="drop" id="drop-img" for="f-img"><img id="f-prev" alt="已选择的图片" hidden><span id="f-imgtxt" class="muted">点击选择或拖入一张图片（JPG / PNG / WebP），AI 会读取图中文字和画面里的宣称元素</span></label>
               <input type="file" id="f-img" accept="image/jpeg,image/png,image/webp" hidden></div>
@@ -125,7 +125,7 @@
     <section class="view" id="v-queue" aria-label="人工复核">
       <div class="head"><h2>人工复核</h2><p>AI 拿不准或容易出错的素材会自动来到这里，由你做最终决定：<b>通过</b>即可以发布，<b>不通过</b>即需要修改。</p></div>
       <div class="filters">
-        <select id="q-ind" aria-label="行业"><option value="">全部行业</option><option>美妆</option><option>食品</option><option>汽车</option></select>
+        <select id="q-ind" aria-label="行业"><option value="">全部行业</option><option>美妆</option><option>食品</option></select>
         <select hidden id="q-src" aria-label="来源"><option value="">全部来源</option><option value="mine">我呈上的</option></select>
         <input type="search" id="q-q" placeholder="搜索文案或违规片段" aria-label="搜索待复核素材">
       </div>
