@@ -83,7 +83,7 @@
       <button class="tab" role="tab" data-view="qa" aria-selected="false">法务问答</button>
       <span class="stroke" id="stroke" aria-hidden="true"></span>
     </nav>
-    <div class="links"><a href="about.html">项目说明</a><a class="hide-sm" href="https://github.com/shishujie-stone/ad-compliance-review" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="links"><a class="hide-sm" href="https://github.com/shishujie-stone/ad-compliance-review" target="_blank" rel="noopener">GitHub</a></div>
   </div></header>
 
   <main class="wrap">
@@ -115,7 +115,7 @@
           </form>
         </div>
         <div>
-          <div class="card pad" id="r-panel"><div class="empty"><span class="mark">审</span>呈上素材后，审核结论会落在这里：是否违规、违规片段、法条依据、修改建议和相似处罚案例。<br>AI 拿不准的，会自动转给人工复核。<br><br><button class="btn" data-go="queue">先看看示例素材的审核结果</button></div></div>
+          <div class="card pad" id="r-panel"><div class="empty"><span class="mark">审</span>呈上素材后，审核结论会落在这里：是否违规、违规片段、法条依据、修改建议和相似处罚案例。<br>AI 拿不准的，会自动转给人工复核。</div></div>
           <div class="head" style="margin-top:22px"><h3>我最近呈上的</h3><button class="btn ghost" data-go="records">全部记录</button></div>
           <div class="recent" id="recent"></div>
         </div>
@@ -126,7 +126,7 @@
       <div class="head"><h2>人工复核</h2><p>AI 拿不准或容易出错的素材会自动来到这里，由你做最终决定：<b>通过</b>即可以发布，<b>不通过</b>即需要修改。</p></div>
       <div class="filters">
         <select id="q-ind" aria-label="行业"><option value="">全部行业</option><option>美妆</option><option>食品</option><option>汽车</option></select>
-        <select id="q-src" aria-label="来源"><option value="">全部来源</option><option value="mine">我呈上的</option><option value="sample">示例素材</option></select>
+        <select hidden id="q-src" aria-label="来源"><option value="">全部来源</option><option value="mine">我呈上的</option></select>
         <input type="search" id="q-q" placeholder="搜索文案或违规片段" aria-label="搜索待复核素材">
       </div>
       <div class="md">
@@ -146,7 +146,7 @@
       <div class="filters">
         <select id="r-st" aria-label="状态"><option value="">全部状态</option><option value="wait">待人工复核</option><option value="done">已人工复核</option><option value="auto">AI 自动处理</option></select>
         <select id="r-ai" aria-label="AI 结论"><option value="">全部 AI 结论</option><option value="1">AI 判违规</option><option value="0">AI 判合规</option></select>
-        <select id="r-src" aria-label="来源"><option value="">全部来源</option><option value="mine">我呈上的</option><option value="sample">示例素材</option></select>
+        <select hidden id="r-src" aria-label="来源"><option value="">全部来源</option><option value="mine">我呈上的</option></select>
         <input type="search" id="r-q" placeholder="搜索文案、违规片段、复核意见" aria-label="搜索审核记录">
         <span class="muted" id="r-count" style="font-size:13px"></span>
       </div>

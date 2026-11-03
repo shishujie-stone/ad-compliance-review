@@ -322,11 +322,11 @@ $('#qa-suggest').addEventListener('click',function(e){var b=e.target.closest('bu
 function showQuota(){if(!status.ready){$('#quota').textContent='';return}$('#quota').textContent=status.mock?'本地示例模式':(status.limited?'今天还可审核 / 提问 '+Math.max(0,status.perDay-status.used)+' 次':'')}
 function refresh(){counts();renderRecent();if(view==='review')renderPanel();if(view==='queue')renderQueue();if(view==='records')renderRecords()}
 renderRecent();
-Promise.all([fetch('kb.json').then(function(r){return r.json()}),fetch('samples.json').then(function(r){return r.json()})]).then(function(a){
-  KB=a[0];KB.cases.forEach(function(c){CASE[c.id]=c});a[1].forEach(function(s){results[s.id]=s});Object.keys(mine).forEach(function(k){results[k]=mine[k]});refresh();
-}).catch(function(){note('示例数据加载失败，请刷新页面。')});
+fetch('kb.json').then(function(r){return r.json()}).then(function(kb){
+  KB=kb;KB.cases.forEach(function(c){CASE[c.id]=c});Object.keys(mine).forEach(function(k){results[k]=mine[k]});refresh();
+}).catch(function(){note('法规数据加载失败，请刷新页面。')});
 fetch('/api/status').then(function(r){return r.json()}).then(function(s){status=s;
-  if(!s.ready){$('#ai-note').textContent='站点还没有配置模型，暂时不能审核新素材；可以先看示例素材的审核结果和人工复核流程。';$('#ai-note').className='notice warn';$('#f-submit').disabled=true;$('#qa-send').disabled=true}
+  if(!s.ready){$('#ai-note').textContent='站点还没有配置模型，暂时不能审核新素材，请稍后再来。';$('#ai-note').className='notice warn';$('#f-submit').disabled=true;$('#qa-send').disabled=true}
   showQuota();
-}).catch(function(){$('#ai-note').textContent='连不上审核服务，暂时不能审核新素材；可以先看示例素材。';$('#ai-note').className='notice warn';$('#f-submit').disabled=true;$('#qa-send').disabled=true});
+}).catch(function(){$('#ai-note').textContent='连不上审核服务，暂时不能审核新素材，请检查网络后刷新。';$('#ai-note').className='notice warn';$('#f-submit').disabled=true;$('#qa-send').disabled=true});
 })();
