@@ -51,6 +51,7 @@ function enter(){
 }
 $('#enter').addEventListener('click',enter);$('#skip').addEventListener('click',openApp);
 try{if(sessionStorage.getItem('acr.entered')==='1')openApp()}catch(e){}
+$('.logo').addEventListener('click',function(){try{sessionStorage.removeItem('acr.entered')}catch(e){}});
 
 /* ---------- 标签切换 ---------- */
 function moveStroke(){var t=$('.tab[aria-selected="true"]'),s=$('#stroke');if(!t||!t.offsetWidth)return;s.style.width=(t.offsetWidth-16)+'px';s.style.transform='translateX('+(t.offsetLeft+8)+'px)'}

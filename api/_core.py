@@ -16,6 +16,8 @@ import hashlib
 import json
 import os
 import re
+import socket
+import time
 import urllib.error
 import urllib.request
 
@@ -163,6 +165,18 @@ def consume(ip):
 
 # ---------- 调用模型 ----------
 
+_getaddrinfo = socket.getaddrinfo
+
+
+def _ipv4_first(*args, **kwargs):
+    # 部分 Serverless 实例没有 IPv6 出口，解析到 IPv6 地址时会报 Errno 99，这里优先用 IPv4
+    res = _getaddrinfo(*args, **kwargs)
+    return [r for r in res if r[0] == socket.AF_INET] or res
+
+
+socket.getaddrinfo = _ipv4_first
+
+
 def call_model(messages, json_mode):
     key = os.environ.get("DASHSCOPE_API_KEY", "").strip()
     if not key:
@@ -174,14 +188,20 @@ def call_model(messages, json_mode):
         body["response_format"] = {"type": "json_object"}
     req = urllib.request.Request(base + "/chat/completions", data=json.dumps(body).encode(), method="POST",
                                  headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=55) as r:
-            data = json.loads(r.read())
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode("utf-8", "replace")[:300]
-        raise ApiError(502, "upstream", f"模型服务返回错误（{e.code}）：{detail}")
-    except Exception as e:
-        raise ApiError(502, "upstream", f"模型服务暂时不可用：{e}")
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=55) as r:
+                data = json.loads(r.read())
+            break
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", "replace")[:300]
+            raise ApiError(502, "upstream", f"模型服务返回错误（{e.code}）：{detail}")
+        except urllib.error.URLError:
+            if attempt:
+                raise ApiError(502, "upstream", "连不上模型服务，请稍后再试")
+            time.sleep(1)  # 网络抖动时重试一次
+        except Exception:
+            raise ApiError(502, "upstream", "模型服务暂时不可用，请稍后再试")
     return data["choices"][0]["message"]["content"] or ""
 
 
