@@ -1,0 +1,15 @@
+# 只上传网站本身；作业报告、评测数据等资料暂不放进仓库
+/*
+!/api/
+!/data/
+!/public/
+!/dev_server.py
+!/vercel.json
+!/README.md
+!/.gitignore
+.DS_Store
+__pycache__/
+*.pyc
+.env
+.env.*
+.vercel

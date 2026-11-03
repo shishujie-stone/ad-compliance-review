@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>项目说明 · 合不合规我一看就知道</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="app.css">
+<style>
+.doc{max-width:860px;margin:0 auto;display:grid;gap:28px}
+.doc h1{font-family:var(--brush);font-weight:400;font-size:clamp(32px,5vw,46px)}
+.doc h2{font-size:20px;margin-bottom:10px}
+.doc p,.doc li{color:var(--ink)}
+.doc .lede{color:var(--muted);font-size:16px;max-width:62ch}
+.doc ul,.doc ol{padding-left:22px;margin:0;display:grid;gap:6px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{padding:14px 16px}
+.kpi b{display:block;font-family:var(--serif);font-size:28px;font-weight:700;color:var(--cinnabar)}
+.kpi span{font-size:12.5px;color:var(--muted)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13.5px}
+.flow span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.flow i{color:var(--mute);font-style:normal}
+.lesson{padding:14px 16px;display:grid;gap:4px}
+.lesson b{font-size:15px;font-family:var(--serif)}
+.doc h2{font-family:var(--serif)}
+.doc section{position:relative}
+</style>
+</head>
+<body>
+<div class="backdrop" aria-hidden="true"><svg class="scape" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4EFE4"/><stop offset=".55" stop-color="#EEE7D8"/><stop offset="1" stop-color="#E6DDCB"/></linearGradient>
+    <linearGradient id="bfar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22201C" stop-opacity=".22"/><stop offset=".55" stop-color="#22201C" stop-opacity=".08"/><stop offset="1" stop-color="#22201C" stop-opacity="0"/></linearGradient>
+    <linearGradient id="bmid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22201C" stop-opacity=".42"/><stop offset=".5" stop-color="#22201C" stop-opacity=".16"/><stop offset="1" stop-color="#22201C" stop-opacity="0"/></linearGradient>
+    <linearGradient id="bnear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A1815" stop-opacity=".78"/><stop offset=".45" stop-color="#22201C" stop-opacity=".38"/><stop offset="1" stop-color="#22201C" stop-opacity=".04"/></linearGradient>
+    <linearGradient id="bfore" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#151310" stop-opacity=".9"/><stop offset="1" stop-color="#22201C" stop-opacity=".55"/></linearGradient>
+    <linearGradient id="bmist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4EFE4" stop-opacity="0"/><stop offset=".5" stop-color="#F4EFE4" stop-opacity=".9"/><stop offset="1" stop-color="#F4EFE4" stop-opacity="0"/></linearGradient>
+    <radialGradient id="bsun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#A8262D" stop-opacity=".55"/><stop offset=".7" stop-color="#A8262D" stop-opacity=".28"/><stop offset="1" stop-color="#A8262D" stop-opacity="0"/></radialGradient>
+    <filter id="bbrush" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".012 .05" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="16"/><feGaussianBlur stdDeviation=".8"/></filter>
+    <filter id="bbleed"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bsky)"/>
+  <circle cx="1210" cy="250" r="70" fill="url(#bsun)"/>
+  <g filter="url(#bbrush)">
+    <path fill="url(#bfar)" d="M0 560 C80 520 140 470 210 480 C270 488 300 430 360 410 C420 390 460 440 520 450 C590 462 640 380 720 360 C790 342 830 400 900 420 C960 438 1010 380 1080 370 C1150 360 1190 420 1260 430 C1330 440 1380 390 1450 400 C1520 410 1570 450 1600 470 L1600 900 L0 900Z"/>
+    <path fill="url(#bmid)" d="M0 650 C60 610 120 560 180 520 C220 494 250 470 290 500 C330 530 350 590 400 600 C450 610 480 540 540 520 C600 500 640 560 690 590 C740 620 790 560 850 530 C890 510 930 470 980 450 C1030 432 1060 480 1100 520 C1150 568 1200 600 1260 580 C1320 560 1350 520 1410 530 C1470 540 1530 600 1600 620 L1600 900 L0 900Z"/>
+    <path fill="url(#bnear)" d="M-20 760 C40 720 90 650 140 600 C170 570 190 520 220 500 C250 520 260 580 300 620 C340 660 380 700 440 700 C500 700 540 650 600 640 C660 630 700 680 760 700 C820 720 880 690 940 690 C1000 690 1040 730 1100 720 C1160 710 1180 640 1230 600 C1270 568 1300 520 1330 500 C1360 520 1380 590 1420 640 C1460 690 1520 710 1620 720 L1620 900 L-20 900Z"/>
+  </g>
+  <rect class="mist m1" x="-400" y="560" width="2400" height="120" fill="url(#bmist)" filter="url(#bbleed)"/>
+  <rect class="mist m2" x="-400" y="690" width="2400" height="110" fill="url(#bmist)" filter="url(#bbleed)"/>
+  <g filter="url(#bbrush)"><path fill="url(#bfore)" d="M-20 900 L-20 820 C40 800 90 770 150 780 C210 790 230 830 290 840 C350 850 380 820 430 830 C480 840 520 880 560 900Z"/><path fill="url(#bfore)" opacity=".75" d="M1240 900 C1300 860 1350 840 1420 830 C1480 822 1540 800 1620 790 L1620 900Z"/></g>
+  <g class="birds" stroke="#22201C" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"><path d="M980 300 q8 -7 16 0 q8 -7 16 0"/><path d="M1030 280 q6 -5 12 0 q6 -5 12 0"/></g>
+</svg></div>
+<header class="top"><div class="wrap">
+  <a class="brand" href="./" style="text-decoration:none;color:inherit"><span class="seal" aria-hidden="true">审</span><b>合不合规我一看就知道</b></a>
+  <div class="links"><a href="./">回到审核工具</a><a class="hide-sm" href="https://github.com/shishujie-stone/ad-compliance-review" target="_blank" rel="noopener">GitHub</a></div>
+</div></header>
+<main class="wrap" style="position:relative;z-index:1"><article class="doc">
+  <header style="display:grid;gap:10px">
+    <p class="muted" style="font-size:13px;letter-spacing:.08em">项目说明</p>
+    <h1>发布之前，先过一遍广告法</h1>
+    <p class="lede">给美妆、食品品牌的内容运营用的广告合规审核工具：上传种草文案、图片或视频，AI 按《广告法》逐句找出风险、给出法条和改写建议；拿不准的转给人来定。</p>
+  </header>
+
+  <section><h2>为什么做</h2>
+    <ul>
+      <li>AI 批量生成的种草内容，很容易出现"全网第一""7 天祛痘"这类极限词和医疗宣称</li>
+      <li>违法成本高：使用绝对化用语罚 20 万～100 万元，虚假广告罚广告费 3～5 倍</li>
+      <li>人工逐条审核慢，标准也不统一；同一句话在不同行业结论不同（"改善睡眠"：保健食品可写，普通食品违规）</li>
+    </ul>
+  </section>
+
+  <section><h2>怎么做</h2>
+    <div class="flow"><span>选择行业</span><i>→</i><span>上传文案 / 图片 / 视频</span><i>→</i><span>识别画面文字</span><i>→</i><span>规则预检</span><i>→</i><span>检索法规与案例</span><i>→</i><span>逐句审核</span><i>→</i><span>存疑转人工</span><i>→</i><span>人工通过 / 不通过</span></div>
+    <ul style="margin-top:12px">
+      <li><b>自建知识库</b>：法规要点 27 条、《广告法》全文 74 条、合规判定补充规则 8 段、市场监管总局和最高检公布的处罚案例 33 例</li>
+      <li><b>原型</b>在本地部署的扣子（Coze Studio）上搭建工作流和智能体，用通义千问做识图和审核；本网站沿用同一套规则和知识库</li>
+      <li><b>防编造</b>：AI 只能给出案例编号，页面去案例库核对后才显示当事人和官方来源链接，查不到的编号直接丢弃</li>
+    </ul>
+  </section>
+
+  <section><h2>评测结果</h2>
+    <div class="kpis">
+      <div class="card kpi"><b>95.7%</b><span>首轮准确率（92 条评测样本）</span></div>
+      <div class="card kpi"><b>100%</b><span>按 Badcase 改进后（同一批样本）</span></div>
+      <div class="card kpi"><b>88.9%</b><span>新写的 18 条留出集</span></div>
+      <div class="card kpi"><b>36%</b><span>需要转人工的比例，AI 判错的全部被转人工</span></div>
+    </div>
+    <p class="muted" style="margin-top:10px;font-size:13.5px">评测集覆盖美妆、食品、汽车，含 19 条边界样本（个人体验、注册证、时间顺序等）和 12 张 AI 生成的营销图片。标准答案由 AI 起草、人工逐条复核修订。</p>
+  </section>
+
+  <section><h2>迭代中学到的</h2>
+    <div style="display:grid;gap:10px">
+      <div class="card lesson"><b>检索比模型更关键</b><span class="muted">口语化的种草文案和书面法条对不上，知识库召回一度为空；加一步"改写检索词"才对齐。</span></div>
+      <div class="card lesson"><b>错误集中在边界，正向规则是关键</b><span class="muted">普通样本全对，边界样本只有 78.9%。补上"什么情况合规"的规则（持注册证可宣称美白、主观体验加免责不算夸大）后，已知误判全部修好。</span></div>
+      <div class="card lesson"><b>约束优于要求</b><span class="muted">"能找到案例就附上"反而诱发编造；改成"只能引用知识库编号"后，法务问答编造案例从 6 题降到 0 题。</span></div>
+      <div class="card lesson"><b>同一批数据重测会偏乐观</b><span class="muted">按 Badcase 改进后在原评测集上达到 100%，换一批没见过的新文案只有 88.9%。留出集才说明真实水平。</span></div>
+      <div class="card lesson"><b>AI 初审 + 人工复核</b><span class="muted">转人工规则只让约三分之一的素材进入人工，但 AI 判错的结论全部落在这三分之一里。</span></div>
+    </div>
+  </section>
+
+  <section><h2>局限</h2>
+    <ul>
+      <li>视频只审核截取的画面和用户填写的口播文字，还没有自动语音转文字</li>
+      <li>标准答案只人工核验了一部分；"广告未标识""特殊品类"样本偏少</li>
+      <li>结果是风险提示，不构成法律意见</li>
+    </ul>
+  </section>
+</article></main>
+<footer class="wrap" style="margin-top:32px;position:relative;z-index:1">合不合规我一看就知道 · 广告合规审核作品集项目</footer>
+</body>
+</html>

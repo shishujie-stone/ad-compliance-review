@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "public",
+  "functions": {
+    "api/*.py": {
+      "maxDuration": 60,
+      "includeFiles": "{api/_core.py,data/kb.json}"
+    }
+  }
+}
